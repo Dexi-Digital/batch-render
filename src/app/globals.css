@@ -40,9 +40,8 @@ select:focus, input:focus { outline:none; border-color:#0043ce; }
 .lot { cursor:pointer; transition:filter .12s; }
 .lot:hover { filter:brightness(0.95) drop-shadow(0 0 4px rgba(0,0,0,.3)); }
 .lot.selected { filter:brightness(0.9) drop-shadow(0 0 6px rgba(0,0,0,.5)); }
-.lot-disp { fill:#a7f0ba; stroke:#198038; stroke-width:0.8; }
-.lot-vend { fill:#ffd7d9; stroke:#da1e28; stroke-width:0.8; }
-.lot-bloq { fill:#fdefb2; stroke:#b28600; stroke-width:0.8; }
+.lot-disp { fill:#a7f0ba; stroke:#198038; stroke-width:0.8; fill-opacity:0.75; }
+.lot-vend { fill:#ffd7d9; stroke:#da1e28; stroke-width:0.8; fill-opacity:0.75; }
 .lot-dimmed { opacity:.15; }
 .lot-label { font-size:8px; font-weight:700; fill:#161616;
              text-anchor:middle; dominant-baseline:central; pointer-events:none; }
