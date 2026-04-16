@@ -5,45 +5,56 @@ import { useEffect } from 'react';
 const SVG_W = 980, SVG_H = 900;
 
 const BLOCKS = [
-  { q:'002', x1:60,  y1:40,  x2:248, y2:185 },
-  { q:'003', x1:278, y1:40,  x2:470, y2:185 },
-  { q:'004', x1:530, y1:40,  x2:710, y2:185 },
-  { q:'005', x1:740, y1:40,  x2:890, y2:185 },
-  { q:'006', x1:80,  y1:215, x2:248, y2:330 },
-  { q:'007', x1:278, y1:215, x2:470, y2:330 },
-  { q:'008', x1:530, y1:215, x2:710, y2:330 },
-  { q:'009', x1:740, y1:215, x2:870, y2:330 },
-  { q:'010', x1:120, y1:360, x2:248, y2:480 },
-  { q:'011', x1:278, y1:360, x2:470, y2:480 },
-  { q:'012', x1:530, y1:360, x2:710, y2:480 },
-  { q:'013', x1:740, y1:360, x2:850, y2:480 },
-  { q:'014', x1:185, y1:510, x2:470, y2:605 },
-  { q:'015', x1:530, y1:510, x2:770, y2:605 },
-  { q:'017', x1:265, y1:635, x2:470, y2:715 },
-  { q:'018', x1:530, y1:635, x2:670, y2:715 },
+  // Banco esquerdo (Q002–Q008, sul→norte) | Banco direito (Q009–Q015)
+  // Fileira 7 (norte, mais larga)
+  { q:'008', x1:55,  y1:80,  x2:450, y2:170 },
+  { q:'015', x1:530, y1:80,  x2:925, y2:170 },
+  // Fileira 6
+  { q:'007', x1:90,  y1:185, x2:450, y2:275 },
+  { q:'014', x1:530, y1:185, x2:890, y2:275 },
+  // Fileira 5
+  { q:'006', x1:125, y1:290, x2:450, y2:375 },
+  { q:'013', x1:530, y1:290, x2:855, y2:375 },
+  // Fileira 4
+  { q:'005', x1:160, y1:390, x2:450, y2:475 },
+  { q:'012', x1:530, y1:390, x2:820, y2:475 },
+  // Fileira 3
+  { q:'004', x1:190, y1:490, x2:450, y2:575 },
+  { q:'011', x1:530, y1:490, x2:790, y2:575 },
+  // Fileira 2
+  { q:'003', x1:220, y1:590, x2:450, y2:675 },
+  { q:'010', x1:530, y1:590, x2:760, y2:675 },
+  // Fileira 1 (sul, mais estreita)
+  { q:'002', x1:255, y1:690, x2:450, y2:775 },
+  { q:'009', x1:530, y1:690, x2:725, y2:775 },
+  // Seção inferior (perto da entrada)
+  { q:'017', x1:305, y1:790, x2:450, y2:840 },
+  { q:'018', x1:530, y1:790, x2:700, y2:840 },
+  // Quadras vazias (placeholder)
+  { q:'016', x1:530, y1:40,  x2:700, y2:75 },
+  { q:'020', x1:55,  y1:40,  x2:220, y2:75 },
+  { q:'021', x1:230, y1:40,  x2:450, y2:75 },
+  // Entrada
+  { q:'001', x1:455, y1:850, x2:525, y2:880 },
 ];
 
-const crossStreets = [40, 95, 150, 205, 260, 315, 370, 425, 480, 535, 590, 730];
-const streetNames = [
-  'AV. JOÃO COSTA MOURA',
-  'R. ALONSO LOPES VALADÃO',
-  'R. DIMAS NEVES MARTINS',
-  'R. DR. PAULO BATISTA DE OLIVEIRA',
-  'R. JOAQUIM DE PAULO MARQUES',
-  'R. JOSÉ QUIRINO FILHO',
-  'R. JOÃO JOSÉ DA COSTA',
-  'R. MANOEL PEREIRA DA SILVA',
-  'R. MÁRIO DOMINGOS FERREIRA',
-  'R. OVÍDIO FERREIRA BORGES',
-  'R. VINICIUS DA SILVA',
-  '',
+const crossStreets = [
+  { y: 780, name: 'R. JOAQUIM DE PAULO MARQUES' },
+  { y: 680, name: 'R. JOSÉ QUIRINO FILHO' },
+  { y: 580, name: 'R. OVÍDIO FERREIRA BORGES' },
+  { y: 480, name: 'R. MÁRIO DOMINGOS FERREIRA' },
+  { y: 380, name: 'R. ALONSO LOPES VALADÃO' },
+  { y: 280, name: 'R. DIMAS NEVES MARTINS' },
+  { y: 180, name: 'R. VINÍCIUS NEVES DA SILVA' },
 ];
 
 export default function Home() {
   useEffect(() => {
-    const CLR: Record<string, string> = { 'Disponível':'#198038', 'Vendida':'#da1e28', 'Bloqueada':'#b28600' };
-    const CLS: Record<string, string> = { 'Disponível':'lot-disp', 'Vendida':'lot-vend', 'Bloqueada':'lot-bloq' };
-    const BDGCLS: Record<string, string> = { 'Disponível':'badge-disp', 'Vendida':'badge-vend', 'Bloqueada':'badge-bloq' };
+    // Bloqueada é tratada visualmente como Vendida
+    const CLR: Record<string, string> = { 'Disponível':'#198038', 'Vendida':'#da1e28', 'Bloqueada':'#da1e28' };
+    const CLS: Record<string, string> = { 'Disponível':'lot-disp', 'Vendida':'lot-vend', 'Bloqueada':'lot-vend' };
+    const BDGCLS: Record<string, string> = { 'Disponível':'badge-disp', 'Vendida':'badge-vend', 'Bloqueada':'badge-vend' };
+    function displaySituacao(s: string) { return s === 'Bloqueada' ? 'Vendida' : s; }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let allLots: any[] = [];
@@ -54,6 +65,7 @@ export default function Home() {
     let dragging = false, lastX = 0, lastY = 0;
     let selectedEl: Element | null = null;
     let lastTouch: { x: number; y: number } | null = null;
+    let panelOpen = false;
 
     function mkEl(parent: Element, tag: string, attrs: Record<string, string | number>) {
       const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
@@ -99,9 +111,7 @@ export default function Home() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       el('s-disp')!.textContent = String(data.filter((l: any) => l.situacao === 'Disponível').length);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      el('s-vend')!.textContent = String(data.filter((l: any) => l.situacao === 'Vendida').length);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      el('s-bloq')!.textContent = String(data.filter((l: any) => l.situacao === 'Bloqueada').length);
+      el('s-vend')!.textContent = String(data.filter((l: any) => l.situacao === 'Vendida' || l.situacao === 'Bloqueada').length);
     }
 
     function buildQuadraBtns() {
@@ -133,7 +143,11 @@ export default function Home() {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     function isVisible(lot: any) {
-      if (filter !== 'all' && lot.situacao !== filter) return false;
+      if (filter !== 'all') {
+        if (filter === 'Vendida') {
+          if (lot.situacao !== 'Vendida' && lot.situacao !== 'Bloqueada') return false;
+        } else if (lot.situacao !== filter) return false;
+      }
       if (activeQuadra && lot.quadra !== activeQuadra) return false;
       if (searchTerm) {
         const s = searchTerm.toLowerCase();
@@ -174,7 +188,7 @@ export default function Home() {
       const c = CLR[lot.situacao] || '#525252';
       tip.innerHTML = `
         <b style="color:#161616">Q${lot.quadra} · Lote ${lot.lote}</b><br>
-        <span style="background:${c};color:#ffffff;padding:1px 7px;border-radius:10px;font-size:11px">${lot.situacao}</span><br>
+        <span style="background:${c};color:#ffffff;padding:1px 7px;border-radius:10px;font-size:11px">${displaySituacao(lot.situacao)}</span><br>
         <span style="color:#525252">Área:</span> <b style="color:#161616">${fmt(lot.area)} m²</b>
         ${lot.situacao === 'Disponível' ? '<br><span style="color:#525252">Valor:</span> <b style="color:#198038">' + fmtR(lot.valor) + '</b>' : ''}
       `;
@@ -197,7 +211,31 @@ export default function Home() {
       if (selectedEl) selectedEl.classList.remove('selected');
       el.classList.add('selected');
       selectedEl = el;
-      showPanel(lot);
+
+      // Zoom no lote clicado e depois abre o painel
+      const rect = (el as SVGElement).getBBox();
+      const vp = document.getElementById('viewport')!.getBoundingClientRect();
+      const panelW = 300;
+      const visibleW = vp.width - panelW;
+      const targetScale = Math.min(visibleW / (rect.width * 6), vp.height / (rect.height * 6), 3);
+      const ns = Math.max(1.5, targetScale);
+      const cx = rect.x + rect.width / 2;
+      const cy = rect.y + rect.height / 2;
+      const newTx = visibleW / 2 - cx * ns;
+      const newTy = vp.height / 2 - cy * ns;
+
+      // Anima o zoom com transition
+      const scene = document.getElementById('scene')!;
+      scene.style.transition = 'transform 0.4s ease';
+      scale = ns;
+      tx = newTx;
+      ty = newTy;
+      applyTransform();
+
+      setTimeout(() => {
+        scene.style.transition = '';
+        showPanel(lot);
+      }, 420);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -208,7 +246,7 @@ export default function Home() {
         <div style="margin:0 12px 10px;background:${c}22;border:1px solid ${c}44;border-radius:10px;padding:12px">
           <div style="font-size:11px;color:#525252">Quadra ${lot.quadra}</div>
           <div style="font-size:22px;font-weight:800;color:#161616">Lote ${lot.lote}</div>
-          <span class="badge ${bdg}">${lot.situacao}</span>
+          <span class="badge ${bdg}">${displaySituacao(lot.situacao)}</span>
         </div>
         <div class="detail-section">
           <div style="font-size:10px;color:#525252;font-weight:700;letter-spacing:.06em;margin-bottom:8px">DIMENSÕES</div>
@@ -263,11 +301,13 @@ export default function Home() {
         ${lot.descricao ? `<div class="detail-section"><div style="font-size:10px;color:#525252;font-weight:700;letter-spacing:.06em;margin-bottom:4px">DESCRIÇÃO</div><div style="font-size:12px;color:#161616">${lot.descricao}</div></div>` : ''}
       `;
       document.getElementById('panel')!.classList.add('open');
+      panelOpen = true;
     }
 
     function closePanel() {
       document.getElementById('panel')!.classList.remove('open');
       if (selectedEl) { selectedEl.classList.remove('selected'); selectedEl = null; }
+      panelOpen = false;
     }
 
     function applyTransform() {
@@ -339,9 +379,9 @@ export default function Home() {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     function drawLot(svg: Element, lot: any, x: number, y: number, w: number, h: number) {
-      const pad = 1;
+      const pad = 0.5;
       const rx = x + pad, ry = y + pad, rw = w - pad * 2, rh = h - pad * 2;
-      if (rw < 2 || rh < 2) return;
+      if (rw < 1 || rh < 1) return;
 
       const visible = isVisible(lot);
       const cls = CLS[lot.situacao] || 'lot-bloq';
@@ -361,12 +401,13 @@ export default function Home() {
       rect.addEventListener('mouseleave', hideTip);
       rect.addEventListener('click', e => { e.stopPropagation(); selectLot(lot, rect); });
 
-      if (rw > 10 && rh > 12) {
+      if (rw > 4 && rh > 4) {
+        const fontSize = rw > 18 && rh > 18 ? 8 : rw > 10 && rh > 10 ? 6 : 4;
         const lbl = mkEl(svg, 'text', {
           x: rx + rw / 2, y: ry + rh / 2 - (rh > 18 ? 3 : 0),
           class: 'lot-label',
           'data-q': lot.quadra, 'data-l': lot.lote,
-          'font-size': (rw > 18 && rh > 18) ? '8' : '6',
+          'font-size': String(fontSize),
           'font-weight': 'bold',
         });
         lbl.textContent = parseInt(lot.lote).toString();
@@ -391,27 +432,34 @@ export default function Home() {
       const w = x2 - x1, h = y2 - y1;
       const n = lots.length;
 
-      mkEl(svg, 'rect', { x: x1, y: y1, width: w, height: h, fill: '#ffffff', stroke: '#e0e0e0', 'stroke-width': '1', rx: '2' });
-      svgText(svg, x1 + w / 2, y1 + h / 2, 'Q' + q, '#0043ce', 10, 'bold', 0.15);
+      // Faixa do header para o label da quadra
+      const headerH = 12;
+      mkEl(svg, 'rect', { x: x1, y: y1, width: w, height: h, fill: '#ffffff', 'fill-opacity': '0.5', stroke: '#e0e0e0', 'stroke-width': '1', rx: '2' });
+      mkEl(svg, 'rect', { x: x1, y: y1, width: w, height: headerH, fill: '#0043ce', 'fill-opacity': '0.9', rx: '2' });
+      svgText(svg, x1 + w / 2, y1 + headerH / 2, 'Q' + q, '#ffffff', 8, 'bold');
 
-      const isWide = w >= h;
+      // Lotes começam abaixo do header
+      const lotY = y1 + headerH;
+      const lotAreaH = h - headerH;
+
+      const isWide = w >= lotAreaH;
       if (isWide) {
         const cols = Math.ceil(n / 2);
         const lotW = w / cols;
-        const lotH = h / 2;
+        const lotH = lotAreaH / 2;
         lots.forEach((lot, i) => {
           const row = Math.floor(i / cols);
           const col = i % cols;
-          drawLot(svg, lot, x1 + col * lotW, y1 + row * lotH, lotW, lotH);
+          drawLot(svg, lot, x1 + col * lotW, lotY + row * lotH, lotW, lotH);
         });
       } else {
         const rows = Math.ceil(n / 2);
         const lotW = w / 2;
-        const lotH = h / rows;
+        const lotH = lotAreaH / rows;
         lots.forEach((lot, i) => {
           const col = Math.floor(i / rows);
           const row = i % rows;
-          drawLot(svg, lot, x1 + col * lotW, y1 + row * lotH, lotW, lotH);
+          drawLot(svg, lot, x1 + col * lotW, lotY + row * lotH, lotW, lotH);
         });
       }
     }
@@ -424,26 +472,49 @@ export default function Home() {
 
       mkEl(svg, 'rect', { x: 0, y: 0, width: SVG_W, height: SVG_H, fill: '#ffffff' });
 
+      // Contorno trapezoidal (mais largo no topo, estreito embaixo, entrada no centro)
       const outerPath = [
-        [60,40],[890,40],[890,220],[870,330],[850,480],[770,605],[670,715],
-        [530,760],[470,760],[330,715],[265,605],[185,480],[120,330],[80,215],[60,40]
+        [255,785],[220,680],[190,580],[160,480],[125,380],[90,280],[55,170],[40,70],[40,30],
+        [940,30],[940,70],[925,170],[890,280],[855,380],[820,480],[790,580],[760,680],[725,785],
+        [530,785],[530,885],[450,885],[450,785],[255,785]
       ];
       const outerD = 'M ' + outerPath.map(p => p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' L ') + ' Z';
       mkEl(svg, 'path', { d: outerD, fill: '#f4f4f4', stroke: '#c6c6c6', 'stroke-width': '1.5' });
 
-      drawRoad(svg, 248, 40, 30, 730, false);
-      drawRoad(svg, 470, 40, 60, 730, true);
-      drawRoad(svg, 710, 40, 30, 730, false);
+      // Background removido — imagem do espelho não alinhava bem com os lotes
 
-      crossStreets.forEach((y, idx) => {
-        mkEl(svg, 'line', { x1: 60, y1: y, x2: 890, y2: y, stroke: '#c6c6c6', 'stroke-width': '1' });
-        if (streetNames[idx] && streetNames[idx].length > 0) {
-          svgText(svg, 100, y - 6, streetNames[idx], '#525252', 7);
-        }
+      // Avenida central vertical
+      drawRoad(svg, 455, 30, 70, 855, true);
+
+      // Ruas transversais (largura ajustada ao trapézio)
+      crossStreets.forEach(({ y, name }) => {
+        const t = (y - 30) / (785 - 30);
+        const leftX = 40 + (255 - 40) * t;
+        const rightX = 940 - (940 - 725) * t;
+        mkEl(svg, 'line', { x1: leftX, y1: y, x2: 455, y2: y, stroke: '#c6c6c6', 'stroke-width': '1' });
+        mkEl(svg, 'line', { x1: 525, y1: y, x2: rightX, y2: y, stroke: '#c6c6c6', 'stroke-width': '1' });
+        // Nome da rua nos dois lados da avenida com fundo branco (centralizado no gap)
+        const nameW = name.length * 4.2;
+        [[leftX, 455], [525, rightX]].forEach(([xa, xb]) => {
+          const cx = (xa + xb) / 2;
+          mkEl(svg, 'rect', { x: cx - nameW / 2 - 4, y: y - 7, width: nameW + 8, height: 14, fill: '#ffffff', rx: 3 });
+          svgText(svg, cx, y, name, '#525252', 7, '600');
+        });
       });
 
-      mkEl(svg, 'circle', { cx: 500, cy: 760, r: 6, fill: '#198038', stroke: '#ffffff', 'stroke-width': '1' });
-      svgText(svg, 500, 780, 'ENTRADA', '#198038', 7);
+      // Label da avenida central (vertical)
+      const avLabel = svgText(svg, 0, 0, 'AV. JOÃO COSTA MOURA', '#161616', 8, 'bold');
+      avLabel.setAttribute('transform', 'translate(490, 500) rotate(-90)');
+
+      // Labels das ruas periféricas (rotacionadas)
+      const leftLabel = svgText(svg, 0, 0, 'R. MANOEL PEREIRA DA SILVA', '#161616', 8, 'bold');
+      leftLabel.setAttribute('transform', 'translate(35, 450) rotate(-80)');
+      const rightLabel = svgText(svg, 0, 0, 'R. DR. PAULO BATISTA DE OLIVEIRA', '#161616', 8, 'bold');
+      rightLabel.setAttribute('transform', 'translate(945, 450) rotate(80)');
+
+      // Entrada
+      mkEl(svg, 'circle', { cx: 490, cy: 895, r: 6, fill: '#198038', stroke: '#ffffff', 'stroke-width': '1' });
+      svgText(svg, 490, 870, 'ENTRADA', '#198038', 7);
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const byQuadra: Record<string, any[]> = {};
@@ -454,16 +525,26 @@ export default function Home() {
 
       BLOCKS.forEach(blk => {
         const lots = byQuadra[blk.q] || [];
-        if (lots.length === 0) return;
+        if (lots.length === 0) {
+          // Bloco vazio — desenha contorno tracejado com label
+          const { x1, y1, x2, y2, q } = blk;
+          const w = x2 - x1, h = y2 - y1;
+          mkEl(svg, 'rect', { x: x1, y: y1, width: w, height: h, fill: '#f4f4f4', stroke: '#c6c6c6', 'stroke-width': '1', rx: '2', 'stroke-dasharray': '4,4' });
+          svgText(svg, x1 + w / 2, y1 + h / 2, 'Q' + q, '#a8a8a8', 10, 'bold');
+          return;
+        }
         drawBlock(svg, blk, lots);
       });
 
+      // Q019 — lote único na área da entrada
       const q19 = byQuadra['019'] || [];
-      if (q19.length > 0) drawLot(svg, q19[0], 470, 715, 60, 45);
+      if (q19.length > 0) drawLot(svg, q19[0], 460, 845, 60, 30);
+
+      // (badges das quadras agora são desenhados dentro do drawBlock como header)
     }
 
     async function init() {
-      const data = await fetch('/lots_data.json').then(r => r.json());
+      const data = await fetch('/lots_data.json?t=' + Date.now()).then(r => r.json());
       allLots = data;
       buildQuadraBtns();
       updateStats();
@@ -475,7 +556,6 @@ export default function Home() {
     const btnFilterAll  = document.getElementById('btn-filter-all')!;
     const btnFilterDisp = document.getElementById('btn-filter-disp')!;
     const btnFilterVend = document.getElementById('btn-filter-vend')!;
-    const btnFilterBloq = document.getElementById('btn-filter-bloq')!;
     const btnZoomOut    = document.getElementById('btn-zoom-out')!;
     const btnZoomIn     = document.getElementById('btn-zoom-in')!;
     const btnReset      = document.getElementById('btn-reset')!;
@@ -490,7 +570,6 @@ export default function Home() {
     btnFilterAll.onclick  = () => setFilter('all', btnFilterAll);
     btnFilterDisp.onclick = () => setFilter('Disponível', btnFilterDisp);
     btnFilterVend.onclick = () => setFilter('Vendida', btnFilterVend);
-    btnFilterBloq.onclick = () => setFilter('Bloqueada', btnFilterBloq);
     btnZoomOut.onclick    = () => zoom(-0.15);
     btnZoomIn.onclick     = () => zoom(0.15);
     btnReset.onclick      = () => resetView();
@@ -505,6 +584,7 @@ export default function Home() {
       applyFilters();
     };
     const handleMouseDown = (e: MouseEvent) => {
+      if (panelOpen) return;
       if ((e.target as Element).classList.contains('lot')) return;
       dragging = true; lastX = e.clientX; lastY = e.clientY; e.preventDefault();
     };
@@ -516,6 +596,7 @@ export default function Home() {
     };
     const handleMouseUp = () => { dragging = false; };
     const handleWheel = (e: WheelEvent) => {
+      if (panelOpen) return;
       e.preventDefault();
       const d = e.deltaY < 0 ? 0.1 : -0.1;
       const vp = (e.currentTarget as Element).getBoundingClientRect();
@@ -528,9 +609,11 @@ export default function Home() {
       applyTransform();
     };
     const handleTouchStart = (e: TouchEvent) => {
+      if (panelOpen) return;
       if (e.touches.length === 1) lastTouch = { x: e.touches[0].clientX, y: e.touches[0].clientY };
     };
     const handleTouchMove = (e: TouchEvent) => {
+      if (panelOpen) return;
       if (e.touches.length === 1 && lastTouch) {
         tx += e.touches[0].clientX - lastTouch.x;
         ty += e.touches[0].clientY - lastTouch.y;
@@ -589,10 +672,6 @@ export default function Home() {
               <div className="stat-val" id="s-vend" style={{ color: '#da1e28' }}>—</div>
               <div className="stat-lbl">Vendidas</div>
             </div>
-            <div className="stat-card">
-              <div className="stat-val" id="s-bloq" style={{ color: '#b28600' }}>—</div>
-              <div className="stat-lbl">Bloqueadas</div>
-            </div>
           </div>
           <div style={{ marginLeft: 'auto', display: 'flex', gap: '6px', flexWrap: 'wrap', alignItems: 'center' }}>
             <input type="text" id="search" placeholder="🔍 Buscar lote..." style={{ width: '140px' }} />
@@ -616,9 +695,6 @@ export default function Home() {
           </button>
           <button className="filter-btn f-vend" id="btn-filter-vend">
             <span className="leg-dot" style={{ background: '#da1e28', marginRight: '4px' }}></span>Vendidas
-          </button>
-          <button className="filter-btn f-bloq" id="btn-filter-bloq">
-            <span className="leg-dot" style={{ background: '#b28600', marginRight: '4px' }}></span>Bloqueadas
           </button>
 
           <div style={{ width: '1px', background: '#e0e0e0', height: '20px', margin: '0 4px' }}></div>
@@ -651,7 +727,6 @@ export default function Home() {
             {[
               { color: '#a7f0ba', label: 'Disponível' },
               { color: '#ffd7d9', label: 'Vendida' },
-              { color: '#fdefb2', label: 'Bloqueada' },
             ].map(({ color, label }) => (
               <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '5px' }}>
                 <span style={{ width: '10px', height: '10px', borderRadius: '2px', background: color, display: 'inline-block', flexShrink: 0 }}></span>
